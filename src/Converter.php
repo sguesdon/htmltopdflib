@@ -37,11 +37,55 @@ class Converter
 {
     protected $level = 0;
 
-    public function convert($text)
-    {
-        $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $text);
+    private $allowedTags = [];
 
+    public function convert($text) {
+        
+        $dom = new DOMDocument('1.0', 'UTF-8');
+                
+        if(count($this->allowedTags) > 0) {
+            $text = strip_tags($text, implode($this->allowedTags));
+        }
+
+        $dom->loadHTML('<?xml encoding="UTF-8">' . $text);
         return Factory::factory($dom->documentElement)->getPdflibString();
+    }
+
+    /**
+     * Gets the value of level
+     * @return mixed
+     */
+    public function getLevel() {
+        return $this->level;
+    }
+    
+    /**
+     * Sets the value of level
+     *
+     * @param mixed $level
+     * @return self
+     */
+    public function setLevel($level) {
+         $this->level = $level;
+         return $this;
+    }
+
+    /**
+     * Gets the value of allowedTags
+     * @return mixed
+     */
+    public function getAllowedTags() {
+        return $this->allowedTags;
+    }
+    
+    /**
+     * Sets the value of allowedTags
+     *
+     * @param mixed $allowedTags
+     * @return self
+     */
+    public function setAllowedTags($allowedTags) {
+         $this->allowedTags = $allowedTags;
+         return $this;
     }
 } 
