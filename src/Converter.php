@@ -31,43 +31,30 @@
 
 namespace Org_Heigl\HtmlToPdflib;
 
-use DOMDocument;
+use Org_Heigl\HtmlToPdflib\DOM\Document as Document;
+use DOMXpath;
 
 class Converter
 {
-    protected $level = 0;
-
+    private $domDoc;
+    private $macroFactory;
     private $allowedTags = [];
+
+    public function __construct() {
+        $this->domDoc = new Document();
+        $this->macroFactory = 
+        $this->domDoc->registerNodeClass('DOMNode' , 'Org_Heigl\HtmlToPdflib\DOM\Node');
+        $this->domDoc->registerNodeClass('DOMElement' , 'Org_Heigl\HtmlToPdflib\DOM\Element');
+    }
 
     public function convert($text) {
         
-        $dom = new DOMDocument('1.0', 'UTF-8');
-                
         if(count($this->allowedTags) > 0) {
             $text = strip_tags($text, implode($this->allowedTags));
         }
-
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $text);
-        return Factory::factory($dom->documentElement)->getPdflibString();
-    }
-
-    /**
-     * Gets the value of level
-     * @return mixed
-     */
-    public function getLevel() {
-        return $this->level;
-    }
-    
-    /**
-     * Sets the value of level
-     *
-     * @param mixed $level
-     * @return self
-     */
-    public function setLevel($level) {
-         $this->level = $level;
-         return $this;
+        
+        $this->domDoc->loadHTML($text);
+        return $this->domDoc->getPdflibString();
     }
 
     /**
