@@ -6,10 +6,6 @@ use DOMDocument;
 
 class Document extends DOMDocument {
 
-    public function __construct($version = '1.0', $charset = 'UTF-8') {
-        parent::__construct(...func_get_args());
-    }
-
     public function getPdfLibString() {
 
         $content = '';
@@ -26,9 +22,5 @@ class Document extends DOMDocument {
         }
 
         return $content;
-    }
-
-    public function loadHtml($html, $options = NULL) {
-        parent::loadHtml('<?xml encoding="UTF-8">' . $html);
     }
 }

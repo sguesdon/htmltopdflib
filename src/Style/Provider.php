@@ -2,26 +2,77 @@
 
 namespace Org_Heigl\HtmlToPdflib\Style;
 
+use Symfony\Component\CssSelector\CssSelectorConverter;
+
+use DOMAttr;
+use DOMXpath;
+
 class Provider {
 
     private $document;
     private $finder;
+    private $cssToXPath;
     private $macros = [];
 
-    public function __construct($document) {
+    public function __construct(&$document) {
         $this->setDocument($document);
         $this->setFinder(new DOMXpath($document));
+        $this->setCssToXPath(new CssSelectorConverter());
     }
 
-    public function applyRule($xpath, $preffix, $suffix, $styleProperties) {
-        //$this->getFinder()->query()
+    public function applyRule($cssPath, $preStr, $postStr, $styleProperties) {
+        
+        $xpath = $this->getCssToXPath()->toXPath($cssPath);
+        $entries = $this->getFinder()->query($xpath);
+        $macro = $this->buildMacro($styleProperties);
+        
+        foreach($entries as $entrie) {
+            $entrie->setAttribute('strprefix', $preStr);
+            $entrie->setAttribute('strpostfix', $postStr);
+            $entrie->setAttribute('macro', $macro->getName());
+        }
+    }
+
+    private function buildMacro($properties) {
+        
+        $macros = $this->getMacros();
+        $hash = md5(json_encode($properties));
+        $macro = current(array_filter($macros, function($macro) use ($hash) {
+            return ($macro->getHash() === $hash);
+        }));
+
+        if(!$macro) {
+            $macro = new Macro();
+            $macro->setName('macro_' . $hash);
+            $macro->setHash($hash);
+            $macro->setProperties($properties);
+            $macros[] = $macro;
+            $this->setMacros($macros);
+        }
+
+        return $macro;
+    }
+
+    public function getPdflibMacros() {
+        
+        $macros = '';
+        
+        foreach($this->getMacros() as $macro) {
+            $attrs = [];
+            foreach($macro->getProperties() as $name => $value) {
+                $attrs[] = "$name=$value";
+            }
+            $macros .= "\n\t" . $macro->getName() . ' { ' . implode(' ', $attrs) . ' } ';
+        }
+
+        return "<macro { "  . $macros . "\n}>";
     }
 
     /**
      * Gets the value of document
      * @return mixed
      */
-    public function getDocument() {
+    public function &getDocument() {
         return $this->document;
     }
     
@@ -31,7 +82,7 @@ class Provider {
      * @param mixed $document
      * @return self
      */
-    public function setDocument($document) {
+    public function setDocument(&$document) {
          $this->document = $document;
          return $this;
     }
@@ -71,6 +122,25 @@ class Provider {
      */
     public function setFinder($finder) {
          $this->finder = $finder;
+         return $this;
+    }
+
+    /**
+     * Gets the value of cssToXPath
+     * @return mixed
+     */
+    public function getCssToXPath() {
+        return $this->cssToXPath;
+    }
+    
+    /**
+     * Sets the value of cssToXPath
+     *
+     * @param mixed $cssToXPath
+     * @return self
+     */
+    public function setCssToXPath($cssToXPath) {
+         $this->cssToXPath = $cssToXPath;
          return $this;
     }
 }

@@ -4,27 +4,28 @@ namespace Org_Heigl\HtmlToPdflib\Style;
 
 class Macro {
 
-    private $tagName;
+    private $name;
     private $hash;
+    private $properties = [];
     private $nodes = [];
 
     /**
-     * Sets the value of tagName
+     * Sets the value of name
      *
-     * @param mixed $tagName
+     * @param mixed $name
      * @return self
      */
-    public function setTagName($tagName) {
-         $this->tagName = $tagName;
-         return $this;
+    public function setName($name) {
+        $this->name = $name;
+        return $this;
     }
 
     /**
-     * Gets the value of tagName
+     * Gets the value of name
      * @return mixed
      */
-    public function getTagName() {
-        return $this->tagName;
+    public function getName() {
+        return $this->name;
     }
 
     /**
@@ -63,5 +64,24 @@ class Macro {
     public function setHash($hash) {
          $this->hash = $hash;
          return $this;
+    }
+
+    /**
+     * Gets the value of properties
+     * @return mixed
+     */
+    public function getProperties() {
+        return $this->properties;
+    }
+    
+    /**
+     * Sets the value of properties
+     *
+     * @param mixed $properties
+     * @return self
+     */
+    public function setProperties($properties) {
+        $this->properties = $properties;
+        return $this;
     }
 }

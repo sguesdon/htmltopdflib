@@ -32,29 +32,33 @@
 namespace Org_Heigl\HtmlToPdflib;
 
 use Org_Heigl\HtmlToPdflib\DOM\Document as Document;
+use Org_Heigl\HtmlToPdflib\Style\Provider as StyleProvider;
 use DOMXpath;
 
 class Converter
 {
     private $domDoc;
-    private $macroFactory;
     private $allowedTags = [];
+    private $styleProvider;
 
     public function __construct() {
-        $this->domDoc = new Document();
-        $this->macroFactory = 
+        $this->domDoc = new Document('1.0', 'UTF-8');
         $this->domDoc->registerNodeClass('DOMNode' , 'Org_Heigl\HtmlToPdflib\DOM\Node');
         $this->domDoc->registerNodeClass('DOMElement' , 'Org_Heigl\HtmlToPdflib\DOM\Element');
     }
 
-    public function convert($text) {
-        
+    public function build($text) {
+
         if(count($this->allowedTags) > 0) {
             $text = strip_tags($text, implode($this->allowedTags));
         }
         
-        $this->domDoc->loadHTML($text);
-        return $this->domDoc->getPdflibString();
+        $this->domDoc->loadHTML('<?xml encoding="UTF-8">' . $text);
+        $this->styleProvider = new StyleProvider($this->domDoc);
+    }
+
+    public function convert() {
+        return $this->styleProvider->getPdflibMacros() . $this->domDoc->getPdflibString();
     }
 
     /**
@@ -73,6 +77,25 @@ class Converter
      */
     public function setAllowedTags($allowedTags) {
          $this->allowedTags = $allowedTags;
+         return $this;
+    }
+
+    /**
+     * Gets the value of styleProvider
+     * @return mixed
+     */
+    public function getStyleProvider() {
+        return $this->styleProvider;
+    }
+    
+    /**
+     * Sets the value of styleProvider
+     *
+     * @param mixed $styleProvider
+     * @return self
+     */
+    public function setStyleProvider($styleProvider) {
+         $this->styleProvider = $styleProvider;
          return $this;
     }
 } 
