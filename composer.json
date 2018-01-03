@@ -9,7 +9,9 @@
             "email": "andreas@heigl.org"
         }
     ],
-    "require": {},
+    "require": {
+        "symfony/css-selector": "^3.4"
+    },
     "autoload" : {
         "psr-4" : {
             "Org_Heigl\\HtmlToPdflib\\" : "src/"
