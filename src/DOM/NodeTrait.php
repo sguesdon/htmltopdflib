@@ -2,7 +2,8 @@
 
 namespace Org_Heigl\HtmlToPdflib\DOM;
 
-use Org_Heigl\HtmlToPdflib\Macro as Macro;
+use Org_Heigl\HtmlToPdflib\Style\Macro;
+
 
 trait NodeTrait {
 
@@ -31,6 +32,10 @@ trait NodeTrait {
              . $previousTagName;
     }
 
+    /**
+     * Get previous macro
+     * @return Object 
+     */
     public function getPreviousMacro() {
 
         if(!$this->parentNode) {
@@ -42,6 +47,16 @@ trait NodeTrait {
         }
 
         return $this->parentNode->getMacro();
+    }
+
+    /**
+     * Set style properties
+     * @param Array $styleProperties Style properties pdflib
+     */
+    public function setStyleProperties($styleProperties) {
+        $styleProperties = array_replace(...func_get_args());
+        $macro = StyleProvider::lookupMacro($styleProperties, $this->getMacro());
+        $this->setMacro($macro);
     }
 
     /**
