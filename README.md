@@ -3,6 +3,8 @@
 An extendable library to convert HTML-Content to text 
 usable with textflows of [PDFlib](http://pdflib.com)
 
+Original project : [heiglandreas/htmltopdflib](https://github.com/heiglandreas/htmltopdflib)
+
 ## Installation
 
 Via [composer](https://getcomposer.org) like this:
