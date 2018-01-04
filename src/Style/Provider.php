@@ -54,13 +54,20 @@ class Provider {
 
         $xpath = $this->getCssToXPath()->toXPath($cssPath);
         $entries = $this->getFinder()->query($xpath);
-        $macro = $this->buildMacro(array_replace($this->getDefaultProperties(), $styleProperties));
+        $macro = $this->buildMacro(
+            array_replace(
+                $this->getDefaultProperties(),
+                $styleProperties
+            )
+        );
         
         foreach($entries as $entrie) {
             $entrie->setAttribute('strprefix', $preStr);
             $entrie->setAttribute('strpostfix', $postStr);
             $entrie->setAttribute('macro', $macro->getName());
         }
+
+        return $this;
     }
 
     private function buildMacro($properties) {
