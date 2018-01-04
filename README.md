@@ -5,10 +5,23 @@ usable with textflows of [PDFlib](http://pdflib.com)
 
 ## Installation
 
-Install the package via [composer](https://getcomposer.org) like this:
+Via [composer](https://getcomposer.org) like this:
 
-```bash
-composer require org_heigl/html-to-pdflib
+```json
+{
+    "name": "my/project",
+    "repositories": [
+        {
+            "url": "https://github.com/NRCommunication/htmltopdflib.git",
+            "type": "vcs"
+        }
+    ],
+    "require": {
+        "org_heigl/html-to-pdflib": "0.1"
+    },
+    "require-dev": {
+    }
+}
 ```
 
 ## Usage
@@ -16,35 +29,53 @@ composer require org_heigl/html-to-pdflib
 In your PHP-Code you can use the package like this:
 
 ```php
-$converter = new Converter();
-$pdflibtext = $converter->convert($htmlcontent);
+<?php
 
-// $pdflibtext now contains calls to macros.
-// The macros themselves need to be prepend to the text though!!
-$pdflibtext = '<macro {
-    bold {fontname=Helvetica fontsize=12 encoding=winansi}
-    bolditalic {fontname=Helvetica fontsize=8 encoding=winansi}
-    italic {fontname=Helvetica fontsize=8 encoding=winansi}
-}>' . $pdflibtext
+use Org_Heigl\HtmlToPdflib\Converter as Converter;
+
+$converter = new Converter();
+
+// configure sanitizer
+$converter->setAllowedTags([
+    '<b>',
+    '<i>
+]);
+
+// building content
+$converter->build('Lorem <b>ipsum dolor</b> sit amet, <i>sed lectus</i> nec ultricies');
+
+// add style rules
+$styleProvider = $this->converter->getStyleProvider();
+
+// setting default properties
+// mixed with further rules
+$styleProvider->setDefaultProperties([
+    'encoding' => 'utf8',
+    'italicangle' => 0,
+    'fontname' => 'Helvetica',
+    'fontsize' => 11
+]);
+
+// applying rules
+$styleProvider
+->applyRule('b, strong', [
+    'fontname' => 'Helvetica-Bold'
+])
+->applyRule('i', [
+    'italicangle' => -12
+]);
+
+echo $converter->convert();
 ```
 
-Currently the following macros are defined:
+result: 
 
-* bold
-* bolditalic
-* italic
-
-The following HTML-Tags ar ecurrently supported:
-
-* em
-* li
-* ol
-* p
-* strong
-* ul
-
-Further Tags can be added. Feel free to fork this repository 
-and open a PullRequest for further tags.
+```html
+<macro { 
+    m0 { encoding=utf8 italicangle=0 fontname=Helvetica-Bold fontsize=11 } 
+    m1 { encoding=utf8 italicangle=-12 fontname=Helvetica fontsize=11 } 
+}>Lorem <&m0>ipsum dolor sit amet, <&m1>sed lectus nec ultricies
+```
 
 ## Contributing
 
