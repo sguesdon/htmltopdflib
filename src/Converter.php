@@ -31,17 +31,71 @@
 
 namespace Org_Heigl\HtmlToPdflib;
 
-use DOMDocument;
+use Org_Heigl\HtmlToPdflib\DOM\Document as Document;
+use Org_Heigl\HtmlToPdflib\Style\Provider as StyleProvider;
+use DOMXpath;
 
 class Converter
 {
-    protected $level = 0;
+    private $domDoc;
+    private $allowedTags = [];
+    private $styleProvider;
 
-    public function convert($text)
-    {
-        $dom = new DOMDocument('1.0', 'UTF-8');
-        $dom->loadHTML('<?xml encoding="UTF-8">' . $text);
+    public function __construct() {
+        $this->domDoc = new Document('1.0', 'UTF-8');
+        $this->domDoc->registerNodeClass('DOMNode' , 'Org_Heigl\HtmlToPdflib\DOM\Node');
+        $this->domDoc->registerNodeClass('DOMElement' , 'Org_Heigl\HtmlToPdflib\DOM\Element');
+    }
 
-        return Factory::factory($dom->documentElement)->getPdflibString();
+    public function build($text) {
+
+        if(count($this->allowedTags) > 0) {
+            $text = strip_tags($text, implode($this->allowedTags));
+        }
+        
+        $this->domDoc->loadHTML('<?xml encoding="UTF-8">' . $text);
+        $this->styleProvider = new StyleProvider($this->domDoc);
+    }
+
+    public function convert() {
+        return $this->styleProvider->getPdflibMacros() . $this->domDoc->getPdflibString();
+    }
+
+    /**
+     * Gets the value of allowedTags
+     * @return mixed
+     */
+    public function getAllowedTags() {
+        return $this->allowedTags;
+    }
+    
+    /**
+     * Sets the value of allowedTags
+     *
+     * @param mixed $allowedTags
+     * @return self
+     */
+    public function setAllowedTags($allowedTags) {
+         $this->allowedTags = $allowedTags;
+         return $this;
+    }
+
+    /**
+     * Gets the value of styleProvider
+     * @return mixed
+     */
+    public function getStyleProvider() {
+        return $this->styleProvider;
+    }
+    
+    /**
+     * Sets the value of styleProvider
+     *
+     * @param mixed $styleProvider
+     * @return self
+     */
+    public function setStyleProvider($styleProvider) {
+         $this->styleProvider = $styleProvider;
+         return $this;
     }
 } 
