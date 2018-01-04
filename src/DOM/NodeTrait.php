@@ -60,7 +60,7 @@ trait NodeTrait {
 
         foreach ($this->childNodes as $child) {
             if(XML_TEXT_NODE === $child->nodeType) {
-                $content .= $child->textContent;
+                $content .= htmlentities($child->textContent);
             } else {
                 $content .= $child->getPdfLibString();
             }
