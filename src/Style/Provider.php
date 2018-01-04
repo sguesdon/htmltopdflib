@@ -44,7 +44,7 @@ class Provider {
 
         if(!$macro) {
             $macro = new Macro();
-            $macro->setName('macro_' . $hash);
+            $macro->setName('m' . count($macros));
             $macro->setHash($hash);
             $macro->setProperties($properties);
             $macros[] = $macro;
