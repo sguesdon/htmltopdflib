@@ -12,6 +12,7 @@ class Provider {
     private $document;
     private $finder;
     private $cssToXPath;
+    private $defaultProperties = [];
     private $macros = [];
 
     public function __construct(&$document) {
@@ -20,11 +21,11 @@ class Provider {
         $this->setCssToXPath(new CssSelectorConverter());
     }
 
-    public function applyRule($cssPath, $preStr, $postStr, $styleProperties) {
-        
+    public function applyRule($cssPath, $styleProperties, $preStr = '', $postStr = '') {
+
         $xpath = $this->getCssToXPath()->toXPath($cssPath);
         $entries = $this->getFinder()->query($xpath);
-        $macro = $this->buildMacro($styleProperties);
+        $macro = $this->buildMacro(array_replace($this->getDefaultProperties(), $styleProperties));
         
         foreach($entries as $entrie) {
             $entrie->setAttribute('strprefix', $preStr);
@@ -142,5 +143,24 @@ class Provider {
     public function setCssToXPath($cssToXPath) {
          $this->cssToXPath = $cssToXPath;
          return $this;
+    }
+
+    /**
+     * Gets the value of defaultProperties
+     * @return mixed
+     */
+    public function getDefaultProperties() {
+        return $this->defaultProperties;
+    }
+    
+    /**
+     * Sets the value of defaultProperties
+     *
+     * @param mixed $defaultProperties
+     * @return self
+     */
+    public function setDefaultProperties($defaultProperties) {
+        $this->defaultProperties = $defaultProperties;
+        return $this;
     }
 }
