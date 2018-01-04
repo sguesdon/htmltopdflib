@@ -41,7 +41,6 @@ class Provider {
     private $document;
     private $finder;
     private $cssToXPath;
-    private $defaultProperties = [];
     private $macros = [];
 
     public function __construct(&$document) {
@@ -54,20 +53,50 @@ class Provider {
 
         $xpath = $this->getCssToXPath()->toXPath($cssPath);
         $entries = $this->getFinder()->query($xpath);
-        $macro = $this->buildMacro(
-            array_replace(
-                $this->getDefaultProperties(),
-                $styleProperties
-            )
-        );
-        
+
         foreach($entries as $entrie) {
             $entrie->setAttribute('strprefix', $preStr);
             $entrie->setAttribute('strpostfix', $postStr);
-            $entrie->setAttribute('macro', $macro->getName());
+            $entrie->setAttribute('macroAttrs', json_encode($styleProperties));
         }
 
         return $this;
+    }
+
+    public function buildMacros($initialAttributes = [], $node = false, $level = 0) {
+
+        if($node === false) {
+            $node = $this->getDocument();
+        }
+
+        if($node->hasChildNodes()) {
+            foreach($node->childNodes as $childNode) {
+                
+                $finalAttributes = $initialAttributes;
+
+                if($childNode->hasAttributes()) {
+
+                    // getting macro attributes
+                    $macroAttrs = $childNode->getAttribute('macroAttrs');
+
+                    if($macroAttrs) {
+
+                        // mixin prev attributes and macro attributes
+                        $finalAttributes = array_replace(
+                            $initialAttributes,
+                            (array)json_decode($macroAttrs)
+                        );
+
+                        // building macro and setting macro name in node
+                        $macro = $this->buildMacro($finalAttributes);
+                        $childNode->setAttribute('macro', $macro->getName());
+                    }
+                }
+                
+                // with children nodes reinjecing extended attributes
+                $this->buildMacros($finalAttributes, $childNode, $level+1);
+            }
+        }
     }
 
     private function buildMacro($properties) {
@@ -179,24 +208,5 @@ class Provider {
     public function setCssToXPath($cssToXPath) {
          $this->cssToXPath = $cssToXPath;
          return $this;
-    }
-
-    /**
-     * Gets the value of defaultProperties
-     * @return mixed
-     */
-    public function getDefaultProperties() {
-        return $this->defaultProperties;
-    }
-    
-    /**
-     * Sets the value of defaultProperties
-     *
-     * @param mixed $defaultProperties
-     * @return self
-     */
-    public function setDefaultProperties($defaultProperties) {
-        $this->defaultProperties = $defaultProperties;
-        return $this;
     }
 }

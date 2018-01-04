@@ -43,7 +43,6 @@ trait NodeTrait {
     public function getPdfLibString() {
 
         $content = '';
-
         $strPrefix = $this->getAttribute('strprefix');
         $strPostfix = $this->getAttribute('strpostfix');
         
@@ -53,15 +52,15 @@ trait NodeTrait {
         }
         
         $prevMacroTag = '';
-        $prevMacroName = $this->getParentMacro();
+        $prevMacroName = $this->getParentNameMacro();
 
         if($prevMacroName) {
             $prevMacroTag = '<&' . $prevMacroName . '>';
         }
-        
+
         foreach ($this->childNodes as $child) {
             if(XML_TEXT_NODE === $child->nodeType) {
-                $content .= $child->textContent;
+                $content .= htmlentities($child->textContent);
             } else {
                 $content .= $child->getPdfLibString();
             }
@@ -74,7 +73,7 @@ trait NodeTrait {
              . $prevMacroTag;
     }
 
-    private function getParentMacro($node = false) {
+    private function getParentNameMacro($node = false) {
         
         $macro = false;
         
@@ -86,7 +85,7 @@ trait NodeTrait {
             $macro = $node->getAttribute('macro');
             if(!$macro) {
                 if(isset($node->parentNode)) {
-                    $macro = $this->getParentMacro($node->parentNode);
+                    $macro = $this->getParentNameMacro($node->parentNode);
                 }
             }
         }
