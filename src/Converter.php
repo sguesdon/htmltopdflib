@@ -22,11 +22,11 @@
  *
  * @category 
  * @author    Andreas Heigl<andreas@heigl.org>
- * @copyright ©2014-2014 Andreas Heigl
+ * @copyright ©2018-2018 NR-Communication
  * @license   http://www.opesource.org/licenses/mit-license.php MIT-License
- * @version   0.0
- * @since     20.03.14
- * @link      https://github.com/heiglandreas/
+ * @version   0.1
+ * @since     04.01.2018
+ * @link      https://github.com/NRCommunication/htmltopdflib
  */
 
 namespace Org_Heigl\HtmlToPdflib;
