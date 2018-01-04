@@ -58,6 +58,7 @@ class Converter
     }
 
     public function convert() {
+        $this->styleProvider->buildMacros();
         return $this->styleProvider->getPdflibMacros() . $this->domDoc->getPdflibString();
     }
 
