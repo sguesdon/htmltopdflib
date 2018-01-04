@@ -93,7 +93,7 @@ result:
 
 after pdf lib process:
 
-![alt text](https://raw.githubusercontent.com/NRCommunication/htmltopdflib/master/resource/readme/result.png)
+![alt text](resource/readme/result.png)
 
 ## Contributing
 
