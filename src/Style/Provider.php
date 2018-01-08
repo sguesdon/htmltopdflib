@@ -29,7 +29,7 @@
  * @link      https://github.com/NRCommunication/htmltopdflib
  */
 
-namespace Org_Heigl\HtmlToPdflib\Style;
+namespace NRCommunication\HtmlToPdflib\Style;
 
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
@@ -55,9 +55,19 @@ class Provider {
         $entries = $this->getFinder()->query($xpath);
 
         foreach($entries as $entrie) {
+
+            $properties = $styleProperties;
+            $prevMacroAttrs = $entrie->getAttribute('macroAttrs');
+            if($prevMacroAttrs) {
+                $properties = array_replace(
+                    (array)json_decode($prevMacroAttrs),
+                    $properties
+                );
+            }
+
             $entrie->setAttribute('strprefix', $preStr);
             $entrie->setAttribute('strpostfix', $postStr);
-            $entrie->setAttribute('macroAttrs', json_encode($styleProperties));
+            $entrie->setAttribute('macroAttrs', json_encode($properties));
         }
 
         return $this;

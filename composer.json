@@ -1,6 +1,7 @@
 {
     "name": "org_heigl/html-to-pdflib",
     "description": "Convert HTML for usage in PDFlib",
+    "version": "0.3",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -14,7 +15,7 @@
     },
     "autoload" : {
         "psr-4" : {
-            "Org_Heigl\\HtmlToPdflib\\" : "src/"
+            "NRCommunication\\HtmlToPdflib\\" : "src/"
         }
     }
 }

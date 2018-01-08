@@ -29,7 +29,7 @@
  * @link      https://github.com/NRCommunication/htmltopdflib
  */
 
-namespace Org_Heigl\HtmlToPdflib\Style;
+namespace NRCommunication\HtmlToPdflib\Style;
 
 class Macro {
 

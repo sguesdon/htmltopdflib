@@ -29,10 +29,10 @@
  * @link      https://github.com/NRCommunication/htmltopdflib
  */
 
-namespace Org_Heigl\HtmlToPdflib\DOM;
+namespace NRCommunication\HtmlToPdflib\DOM;
 
 use DOMAttr;
-use Org_Heigl\HtmlToPdflib\Style\Macro;
+use NRCommunication\HtmlToPdflib\Style\Macro;
 
 trait NodeTrait {
 

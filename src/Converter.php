@@ -29,10 +29,10 @@
  * @link      https://github.com/NRCommunication/htmltopdflib
  */
 
-namespace Org_Heigl\HtmlToPdflib;
+namespace NRCommunication\HtmlToPdflib;
 
-use Org_Heigl\HtmlToPdflib\DOM\Document as Document;
-use Org_Heigl\HtmlToPdflib\Style\Provider as StyleProvider;
+use NRCommunication\HtmlToPdflib\DOM\Document as Document;
+use NRCommunication\HtmlToPdflib\Style\Provider as StyleProvider;
 use DOMXpath;
 
 class Converter
@@ -43,8 +43,8 @@ class Converter
 
     public function __construct() {
         $this->domDoc = new Document('1.0', 'UTF-8');
-        $this->domDoc->registerNodeClass('DOMNode' , 'Org_Heigl\HtmlToPdflib\DOM\Node');
-        $this->domDoc->registerNodeClass('DOMElement' , 'Org_Heigl\HtmlToPdflib\DOM\Element');
+        $this->domDoc->registerNodeClass('DOMNode' , 'NRCommunication\HtmlToPdflib\DOM\Node');
+        $this->domDoc->registerNodeClass('DOMElement' , 'NRCommunication\HtmlToPdflib\DOM\Element');
     }
 
     public function build($text) {
