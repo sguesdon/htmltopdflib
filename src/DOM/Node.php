@@ -29,7 +29,7 @@
  * @link      https://github.com/NRCommunication/htmltopdflib
  */
 
-namespace Org_Heigl\HtmlToPdflib\DOM;
+namespace NRCommunication\HtmlToPdflib\DOM;
 
 use DOMNode;
 

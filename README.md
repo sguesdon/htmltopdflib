@@ -33,7 +33,7 @@ In your PHP-Code you can use the package like this:
 ```php
 <?php
 
-use Org_Heigl\HtmlToPdflib\Converter as Converter;
+use NRCommunication\HtmlToPdflib\Converter as Converter;
 
 $converter = new Converter();
 
