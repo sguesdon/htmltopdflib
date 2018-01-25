@@ -74,11 +74,11 @@ trait NodeTrait {
             }
         }
 
-        return $macroTag
-             . $strPrefix
+        return $strPrefix
+             . $macroTag
              . $content
-             . $strPostfix
-             . $prevMacroTag;
+             . $prevMacroTag
+             . $strPostfix;
     }
 
     private function getParentNameMacro($node = false) {
