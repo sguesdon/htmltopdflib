@@ -45,6 +45,14 @@ trait NodeTrait {
         $content = '';
         $strPrefix = $this->getAttribute('strprefix');
         $strPostfix = $this->getAttribute('strpostfix');
+
+        if($this->parentNode->firstChild === $this) {
+            $strPrefix = '';
+        }
+
+        if($this->parentNode->lastChild === $this) {
+            $strPostfix = '';
+        }
         
         $macroTag = '';
         if($this->getAttribute('macro')) {
@@ -66,11 +74,11 @@ trait NodeTrait {
             }
         }
 
-        return $macroTag
-             . $strPrefix
+        return $strPrefix
+             . $macroTag
              . $content
-             . $strPostfix
-             . $prevMacroTag;
+             . $prevMacroTag
+             . $strPostfix;
     }
 
     private function getParentNameMacro($node = false) {
