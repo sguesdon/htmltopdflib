@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c)2014-2014 heiglandreas
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -11,7 +11,7 @@
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @category 
+ * @category
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright ©2018-2018 NR-Communication
  * @license   http://www.opesource.org/licenses/mit-license.php MIT-License
@@ -52,14 +52,23 @@ class Converter
         if(count($this->allowedTags) > 0) {
             $text = strip_tags($text, implode($this->allowedTags));
         }
-        
+
         $this->domDoc->loadHTML('<?xml encoding="UTF-8">' . $text);
         $this->styleProvider = new StyleProvider($this->domDoc);
     }
 
+    /**
+     * Convert text and styles in macro & text string
+     * @return String macro & text string pdflib
+     */
     public function convert() {
-        $this->styleProvider->buildMacros();
-        return $this->styleProvider->getPdflibMacros() . $this->domDoc->getPdflibString();
+        $str = $this->domDoc->getPdflibString();
+        if($str === "") {
+            return "";
+        } else {
+            $this->styleProvider->buildMacros();
+            return $this->styleProvider->getPdflibMacros() . $this->domDoc->getPdflibString();
+        }
     }
 
     /**
@@ -69,7 +78,7 @@ class Converter
     public function getAllowedTags() {
         return $this->allowedTags;
     }
-    
+
     /**
      * Sets the value of allowedTags
      *
@@ -88,7 +97,7 @@ class Converter
     public function getStyleProvider() {
         return $this->styleProvider;
     }
-    
+
     /**
      * Sets the value of styleProvider
      *
@@ -99,4 +108,4 @@ class Converter
          $this->styleProvider = $styleProvider;
          return $this;
     }
-} 
+}
