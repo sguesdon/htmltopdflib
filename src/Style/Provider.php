@@ -68,24 +68,26 @@ class Provider {
             if($entrie->hasAttribute('style')) {
                 $styleProps = explode(';', $entrie->getAttribute('style'));
                 foreach($styleProps as $prop) {
-                    [$propName, $propValue] = array_map('trim', explode(':', $prop));
-                    switch(trim($propName)) {
-                        case 'text-align':
-                            switch(trim($propValue)) {
-                                case 'center':
-                                    $properties['alignment'] = 'center';
-                                    break;
-                                case 'left':
-                                    $properties['alignment'] = 'left';
-                                    break;
-                                case 'right':
-                                    $properties['alignment'] = 'right';
-                                    break;
-                                case 'justify':
-                                    $properties['alignment'] = 'justify';
-                                    break;
-                            }
-                            break;
+                    if(preg_match('#^.+?:.+?$#', $prop)) {
+                        [$propName, $propValue] = array_map('trim', explode(':', $prop));
+                        switch(trim($propName)) {
+                            case 'text-align':
+                                switch(trim($propValue)) {
+                                    case 'center':
+                                        $properties['alignment'] = 'center';
+                                        break;
+                                    case 'left':
+                                        $properties['alignment'] = 'left';
+                                        break;
+                                    case 'right':
+                                        $properties['alignment'] = 'right';
+                                        break;
+                                    case 'justify':
+                                        $properties['alignment'] = 'justify';
+                                        break;
+                                }
+                                break;
+                        }
                     }
                 }
             }
