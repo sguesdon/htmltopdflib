@@ -55,16 +55,16 @@ trait NodeTrait {
         }
 
         $macroTag = '';
+        $prevMacroTag = '';
         $macroName = $this->getAttribute('macro');
-        $macroParentName = $this->getParentNameMacro();
+        $prevMacroName = $this->getParentNameMacro();
 
-        if($macroName && $macroName !== $macroParentName) {
+        if($macroName && $macroName !== $prevMacroName) {
             $macroTag = '<&' . $this->getAttribute('macro') . '>';
         }
 
-        $prevMacroTag = '';
-        if($macroParentName && $macroParentName !== $macroName) {
-            $prevMacroTag = '<&' . $macroParentName . '>';
+        if($prevMacroName && $prevMacroName !== $macroName) {
+            $prevMacroTag = '<&' . $prevMacroName . '>';
         }
 
         foreach ($this->childNodes as $child) {
@@ -76,10 +76,10 @@ trait NodeTrait {
         }
 
         return $macroTag
-            . $strPrefix
-            . $content
-            . $strPostfix
-            . $prevMacroTag;
+             . $strPrefix
+             . $content
+             . $strPostfix
+             . $prevMacroTag;
     }
 
     private function getParentNameMacro($node = false) {
