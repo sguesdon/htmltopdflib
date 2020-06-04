@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c)2014-2014 heiglandreas
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -11,7 +11,7 @@
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  *
- * @category 
+ * @category
  * @author    Andreas Heigl<andreas@heigl.org>
  * @copyright ©2018-2018 NR-Communication
  * @license   http://www.opesource.org/licenses/mit-license.php MIT-License
@@ -65,6 +65,31 @@ class Provider {
                 );
             }
 
+            if($entrie->hasAttribute('style')) {
+                $styleProps = explode(';', $entrie->getAttribute('style'));
+                foreach($styleProps as $prop) {
+                    [$propName, $propValue] = array_map('trim', explode(':', $prop));
+                    switch(trim($propName)) {
+                        case 'text-align':
+                            switch(trim($propValue)) {
+                                case 'center':
+                                    $properties['alignment'] = 'center';
+                                    break;
+                                case 'left':
+                                    $properties['alignment'] = 'left';
+                                    break;
+                                case 'right':
+                                    $properties['alignment'] = 'right';
+                                    break;
+                                case 'justify':
+                                    $properties['alignment'] = 'justify';
+                                    break;
+                            }
+                            break;
+                    }
+                }
+            }
+
             $entrie->setAttribute('strprefix', $preStr);
             $entrie->setAttribute('strpostfix', $postStr);
             $entrie->setAttribute('macroAttrs', json_encode($properties));
@@ -81,7 +106,7 @@ class Provider {
 
         if($node->hasChildNodes()) {
             foreach($node->childNodes as $childNode) {
-                
+
                 $finalAttributes = $initialAttributes;
 
                 if($childNode->hasAttributes()) {
@@ -102,7 +127,7 @@ class Provider {
                         $childNode->setAttribute('macro', $macro->getName());
                     }
                 }
-                
+
                 // with children nodes reinjecing extended attributes
                 $this->buildMacros($finalAttributes, $childNode, $level+1);
             }
@@ -110,7 +135,7 @@ class Provider {
     }
 
     private function buildMacro($properties) {
-        
+
         $macros = $this->getMacros();
         $hash = md5(json_encode($properties));
         $macro = current(array_filter($macros, function($macro) use ($hash) {
@@ -130,9 +155,9 @@ class Provider {
     }
 
     public function getPdflibMacros() {
-        
+
         $macros = '';
-        
+
         foreach($this->getMacros() as $macro) {
             $attrs = [];
             foreach($macro->getProperties() as $name => $value) {
@@ -151,7 +176,7 @@ class Provider {
     public function &getDocument() {
         return $this->document;
     }
-    
+
     /**
      * Sets the value of document
      *
@@ -170,7 +195,7 @@ class Provider {
     public function getMacros() {
         return $this->macros;
     }
-    
+
     /**
      * Sets the value of macros
      *
@@ -189,7 +214,7 @@ class Provider {
     public function getFinder() {
         return $this->finder;
     }
-    
+
     /**
      * Sets the value of finder
      *
@@ -208,7 +233,7 @@ class Provider {
     public function getCssToXPath() {
         return $this->cssToXPath;
     }
-    
+
     /**
      * Sets the value of cssToXPath
      *
